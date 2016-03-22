@@ -19,6 +19,7 @@ namespace :docker do
 
   DESC
   task :build do
+    next
     on roles( :build, filter: :primary ) do |host|
       path = File.join( shared_path,
                         fetch( :application_container ).
