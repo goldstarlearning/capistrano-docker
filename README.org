@@ -19,11 +19,40 @@ bundle
 
 ** Usage
 
-Add this line to your capistrano configuration:
+   Add this line to your capistrano configuration:
 
-#+BEGIN_SRC ruby
-  require "capistrano/docker"
-#+END_SRC
+   #+BEGIN_SRC ruby
+     require "capistrano/docker"
+   #+END_SRC
+
+*** Configuration Variables
+
+    capistrano-docker uses these variables to name docker images and
+    containers:
+
+    #+BEGIN_SRC ruby
+      set :organization, "orgname"
+      set :application,  "myapp"
+      set :branch, fetch(ENV["BRANCH"], `git rev-parse --abbrev-ref HEAD`.rstrip)
+    #+END_SRC
+
+    Docker images will be named/tagged as:
+        `organization/application:branch-SHA`
+
+*** Available Tasks
+
+    #+BEGIN_SRC sh
+    cd test-app && bundle exec cap -T docker
+    #+END_SRC
+
+    #+RESULTS:
+    | cap | docker:build   | # | Build   | the     | docker      | image      |            |                       |         |
+    | cap | docker:clean   | # | Clean   | docker  | images      | older      | than       | :keep_images_for_days | [3]     |
+    | cap | docker:deploy  | # | Run     | the     | application | container  |            |                       |         |
+    | cap | docker:install | # | Install | built   | docker      | image      | onto       | application           | servers |
+    | cap | docker:ps      | # | Show    | running | docker      | containers |            |                       |         |
+    | cap | docker:pull    | # | Pull    | the     | latest      | docker     | build      |                       |         |
+    | cap | docker:show    | # | List    | running | container   | for        | deployment | branch                |         |
 
 ** Contributing
 
