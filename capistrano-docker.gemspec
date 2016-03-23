@@ -1,17 +1,17 @@
 # coding: utf-8
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require "capistrano/docker/deploy/version"
+require "capistrano/docker/version"
 
 Gem::Specification.new do |spec|
-  spec.name        = "capistrano-docker-deploy"
+  spec.name        = "capistrano-docker"
   spec.version     = Capistrano::Docker::Deploy::VERSION
   spec.authors     = ["Toby Tripp"]
   spec.email       = ["ttripp+github@goldstarlearning.com"]
 
   spec.summary     = %q{Use capistrano to deploy a docker container}
   spec.homepage    =
-    "https://github.com/goldstarlearning/capistrano-docker-deploy"
+    "https://github.com/goldstarlearning/capistrano-docker"
   spec.license     = "MIT"
 
   # Prevent pushing this gem to RubyGems.org by setting 'allowed_push_host', or

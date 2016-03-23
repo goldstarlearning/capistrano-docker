@@ -1,0 +1,5 @@
+source "https://rubygems.org"
+
+gem "capistrano-docker",
+    path: "../../capistrano-docker"
+#git: "https://github.com/goldstarlearning/capistrano-docker.git"
