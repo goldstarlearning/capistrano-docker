@@ -39,6 +39,23 @@ bundle
     Docker images will be named/tagged as:
         `organization/application:branch-SHA`
 
+    Currently, the docker image is built on the primary server having
+    the `build' role, then copied and installed on all servers with
+    the `app' role.  Implying a stage set-up that includes something
+    like the following:
+
+    #+BEGIN_SRC ruby
+      server ENV["APP_SERVER"],
+             user: "deploy",
+             roles: %w{app web}
+
+      server ENV["BUILD_SERVER"],
+             user: "deploy",
+             roles: %w{build},
+             primary: true
+    #+END_SRC
+
+
 *** Available Tasks
 
     #+BEGIN_SRC sh
