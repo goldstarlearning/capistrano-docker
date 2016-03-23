@@ -126,9 +126,32 @@ namespace :docker do
     end
   end
 
-  desc "Clean docker images older than :keep_images_for_days [3]"
+  desc "Clean docker image files older than :keep_images_for_days [default: 3]"
   task :clean do
+    on roles( :all ) do |host|
+      days = fetch( :keep_images_for_days, 3 )
 
+      within shared_path do
+        images = capture(
+          :docker,
+          "images | ",
+          "awk '/^#{fetch( :organization )}.*days ago/ && $4 > #{days} { print $3 }'"
+        )
+
+        images.lines.each do |image|
+          execute :docker, :rmi, "#{image.rstrip} || true"
+        end
+
+        execute :docker, :rm,
+                "-v `docker ps -a -q -f status=exited` || true"
+
+        execute :find, ".",
+                "-maxdepth 1",
+                "-mtime +#{days}",
+                "-type f",
+                "-exec rm {} +"
+      end
+    end
   end
 
   desc "Pull the latest docker build"
@@ -156,6 +179,12 @@ namespace :docker do
     end
   end
 
+  desc "Show installed images on app servers"
+  task :images do
+    on roles( :app ) do |host|
+      puts capture( :docker, :images )
+    end
+  end
 
   desc "Show running docker containers"
   task :ps do

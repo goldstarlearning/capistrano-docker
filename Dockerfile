@@ -1,5 +1,7 @@
 FROM postgres:9.4
 
+# A dockerfile to use to test the deployment tasks
+
 RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main' \
   $PG_MAJOR > /etc/apt/sources.list.d/pgdg.list
 RUN apt-get update && \
