@@ -1,5 +1,9 @@
 require "capistrano/docker/remote"
 
+def message( host, txt )
+  puts "#{fetch :stage} #{host.hostname}> #{txt}"
+end
+
 namespace :docker do
   task set_container_tags: ["deploy:set_current_revision"] do
     set :image_name, -> {
@@ -7,7 +11,7 @@ namespace :docker do
         fetch( :organization, "ORGANIZATION-NOT-SET" ),
         fetch( :application ),
         fetch( :branch ),
-        fetch( :current_revision)
+        fetch( :current_revision, "SNAPSHOT" )
       ]
     }
 
@@ -17,7 +21,7 @@ namespace :docker do
 
     set :container_name, -> {
       [fetch( :application ),
-       fetch( :image_version )
+       fetch( :image_tag)
       ].join( "-" )
     }
   end
@@ -29,7 +33,7 @@ namespace :docker do
     container_name = fetch( :container_name )
 
     on roles( :app ) do |host|
-      if running?( container_name )
+      if test Capistrano::Docker::Remote.running?( container_name )
         message host, "#{container_name} is already running"
         next
       end
@@ -48,6 +52,20 @@ namespace :docker do
         execute( :docker, :rm, "-f", docker_id, "|| true" )
       end
 
+      message host, "Starting #{container_name}"
+      within release_path do
+        if test "[ -x bin/docker-start ]"
+          execute( "bin/docker-start",
+                   "--name #{container_name}",
+                   "--image #{fetch( :image_name )}" )
+        else
+          execute :docker, :run,
+                  "--name #{container_name}",
+                  "--env-file=#{fetch( :environment_file, '/etc/environment' )}",
+                  "-d",
+                  fetch( :image_name )
+        end
+      end
     end
   end
 
@@ -57,7 +75,7 @@ namespace :docker do
   Installation is via copy from role :build to role :app.
   DESC
   task install: [:build, "docker:set_container_tags"] do
-    Docker::Remote.new(
+    Capistrano::Docker::Remote.new(
       fetch( :application ),
       org: fetch( :organization )
     ).install_image(

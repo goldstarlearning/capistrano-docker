@@ -5,5 +5,7 @@
 ** To Run
 
    #+BEGIN_SRC sh
-     bundle exec cap test deploy
+     export APP_SERVER=app.example.com
+     export BUILD_SERVER=build.example.com
+     bundle exec cap test deploy docker:ps
    #+END_SRC

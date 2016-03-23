@@ -8,12 +8,12 @@ module Capistrano
         @application = application
       end
 
-      def loaded?( image: fetch( :docker_image ), tag: "latest" )
-        test "docker images | grep '#{image} *#{Regexp.escape tag} '"
+      def self.loaded?( image: fetch( :docker_image ), tag: "latest" )
+        "docker images | grep '#{image} *#{Regexp.escape tag} '"
       end
 
-      def running?( name )
-        test "docker ps | grep #{Regexp.escape name}"
+      def self.running?( name )
+        "docker ps | grep #{Regexp.escape name}"
       end
 
       # For the moment
@@ -22,7 +22,7 @@ module Capistrano
         file_server = roles( :build, filter: :primary ).first
 
         on roles( :app ) do |host|
-          if loaded?( image: image, tag: tag )
+          if test "docker images | grep '#{image} *#{Regexp.escape tag} '"
             message host, "#{tag} already installed"
             next
           end
@@ -31,6 +31,7 @@ module Capistrano
             message host,
                     "Copying #{tag} " \
                     "from #{file_server.hostname}"
+
             execute :scp,
                     "%s@%s:%s" % [file_server.user,
                                   file_server.hostname,
