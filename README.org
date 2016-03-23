@@ -46,13 +46,14 @@ bundle
     #+END_SRC
 
     #+RESULTS:
-    | cap | docker:build   | # | Build   | the     | docker      | image      |            |                       |         |
-    | cap | docker:clean   | # | Clean   | docker  | images      | older      | than       | :keep_images_for_days | [3]     |
-    | cap | docker:deploy  | # | Run     | the     | application | container  |            |                       |         |
-    | cap | docker:install | # | Install | built   | docker      | image      | onto       | application           | servers |
-    | cap | docker:ps      | # | Show    | running | docker      | containers |            |                       |         |
-    | cap | docker:pull    | # | Pull    | the     | latest      | docker     | build      |                       |         |
-    | cap | docker:show    | # | List    | running | container   | for        | deployment | branch                |         |
+    
+    | cap | docker:build   | Build the docker image |
+    | cap | docker:clean   | Clean docker images older than :keep_images_for_days [default: 3]     |
+    | cap | docker:deploy  | Run the application container  |
+    | cap | docker:install | Install built docker image onto application servers |
+    | cap | docker:ps      | Show running docker containers |
+    | cap | docker:pull    | Pull the latest  docker build  |
+    | cap | docker:show    | List running container for deployment branch  |
 
 ** Contributing
 
