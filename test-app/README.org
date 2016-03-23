@@ -5,5 +5,5 @@
 ** To Run
 
    #+BEGIN_SRC sh
-   
+     bundle exec cap test deploy
    #+END_SRC

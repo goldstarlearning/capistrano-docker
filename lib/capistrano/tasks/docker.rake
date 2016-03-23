@@ -86,8 +86,6 @@ namespace :docker do
   Images that already exist will not be built again.
   DESC
   task build: :set_container_tags do
-    fail fetch( :image_name )
-
     on roles( :build, filter: :primary ) do |host|
       path = File.join( shared_path,
                         fetch( :image_name ).
