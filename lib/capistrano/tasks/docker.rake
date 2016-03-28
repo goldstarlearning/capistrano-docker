@@ -54,7 +54,7 @@ namespace :docker do
 
       message host, "Starting #{container_name}"
       within release_path do
-        if test "[ -x bin/docker-start ]"
+        if test "[ -x #{release_path}/bin/docker-start ]"
           execute( "bin/docker-start",
                    "--name #{container_name}",
                    "--image #{fetch( :image_name )}" )
