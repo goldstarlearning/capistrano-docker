@@ -114,6 +114,9 @@ namespace :docker do
         message host, "#{fetch :image_file} already built"
       else
         within release_path do
+          if test "[ -x #{release_path}/bin/pre-docker-build ]"
+            execute( "bin/pre-docker-build" )
+          end
           message host, "Building image: #{fetch :image_name}"
           execute :docker, :build,
                   "-t", fetch( :image_name ),

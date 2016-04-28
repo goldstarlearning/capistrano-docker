@@ -8,5 +8,7 @@ RUN apt-get update && \
   apt-get install -y postgresql-plperl-9.4 && \
   rm -rf /var/lib/apt/lists/*
 
+ADD pre-docker-build_artifact pre-docker-build_artifact
+
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["postgres"]
